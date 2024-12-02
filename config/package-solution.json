@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "batwebpart-client-side-solution",
+    "id": "08407a65-ab56-44fa-82f3-201aba36f9b0",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "BATWEBPART description"
+      },
+      "longDescription": {
+        "default": "BATWEBPART description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "batwebpart Feature",
+        "description": "The feature that activates elements of the batwebpart solution.",
+        "id": "ea78fabf-7944-4c5f-93c8-8d1cc8f4dd27",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/batwebpart.sppkg"
+  }
+}

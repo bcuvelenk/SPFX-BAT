@@ -1,0 +1,392 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+
+.bat {
+  font-family: 'Montserrat';
+  text-align: center;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.teams {
+  background-color: #0e2b63;; /* Teams teması */
+  color: white;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0e2b63;;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  margin-right: 15px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 200px;
+}
+
+
+/* Folder Section */
+.folderSection {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.folderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px #0e2b63;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.folderContainer:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px #0e2b63;
+}
+
+.folderIcon {
+  font-size: 36px;
+  color: #0e2b63;
+  margin-bottom: 10px;
+}
+
+.folderName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0e2b63;
+  text-align: center;
+  text-decoration: none;
+}
+
+.folderName a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.folderName a:hover {
+  text-decoration: underline;
+}
+
+.folderItem {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin: 5px 0;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+.fileList {
+  margin-top: 20px;
+}
+
+.fileItem {
+  cursor: pointer;
+  padding: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+.adminButton {
+  background-color: #0078d4; /* Örnek bir renk */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #005a8c; /* Hover efekti */
+  }
+}
+.adminContent {
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.backButton {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.backButton:hover {
+  background-color: #c0392b;
+}
+
+/* Typography */
+h3 {
+  font-size: 24px;
+  color: #0e2b63;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+h4 {
+  font-size: 20px;
+  color: #666;
+  font-weight: 400;
+}
+
+p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.uploadButton {
+  background-color: #4caf50; /* Yeşil renk */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.uploadButton:hover {
+  background-color: #45a049; /* Daha koyu yeşil hover efekti */
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .headerRight {
+    margin-top: 10px;
+  }
+
+  .folderSection {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+.folderList {
+  margin-top: 20px;
+}
+
+.folderItem {
+  margin: 5px 0;
+  padding: 10px;
+  background-color: #f3f2f1;
+  border-radius: 5px;
+}
+.searchResults {
+  margin-top: 20px;
+}
+ 
+.resultItem {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+ 
+.resultItem a {
+  color: #0078d4;
+  text-decoration: none;
+}
+ 
+.resultItem a:hover {
+  text-decoration: underline;
+}
+.searchButton {
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+ 
+.searchButton:hover {
+  background-color: #005a9e;
+}
+
+.managerButton {
+  margin-left: 10px;
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.managerButton:hover {
+  background-color: #005a9e;
+}
+
+.department-manager-container {
+  border: 2px solid #003366;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+}
+
+
+
+.icon-folder {
+  font-size: 24px;
+  margin-right: 10px;
+  color: #001a72;
+}
+
+.folder-list {
+  margin-bottom: 20px;
+}
+
+.folder-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.folder-item span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.folder-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #d32f2f;
+  transition: transform 0.2s;
+}
+
+.folder-button:hover {
+  transform: scale(1.1);
+}
+
+.folder-button.delete {
+  color: #d32f2f;
+}
+
+.folder-button.edit {
+  color: #1976d2;
+}
+
+.folder-add {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.folder-add input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.add-button {
+  width: 40px;
+  height: 40px;
+  background-color: #001a72;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+.addInput {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.add-button:hover {
+  background-color: #0039cb;
+}
+
+.folder-rename {
+  margin-bottom: 20px;
+}
+
+.folder-rename input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+.renameInput {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}

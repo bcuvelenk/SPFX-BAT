@@ -1,0 +1,57 @@
+.adminPanel {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  max-width: 600px;
+  margin: 20px auto;
+}
+ 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+ 
+.closeButton {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+ 
+.closeButton:hover {
+  background-color: #c0392b;
+}
+ 
+.formContent {
+  margin-top: 20px;
+}
+.adminContent {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  max-width: 600px;
+  margin: 20px auto;
+}
+ 
+.backButton {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+ 
+.backButton:hover {
+  background-color: #c0392b;
+}
+ 
+.uploadButton {
+  margin-top: 15px;
+}
