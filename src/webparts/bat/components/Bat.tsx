@@ -21,6 +21,7 @@ export interface Folder {
 }
 
 interface IBatState {
+  isAdmin: boolean;
   isAdminPanelVisible: boolean;
   isDepartmentManagerVisible: boolean;
   searchQuery: string;
@@ -28,12 +29,14 @@ interface IBatState {
   folders: Folder[];
   selectedDepartment: string;
   isSearching: boolean;
+  userRole: string; // Kullanıcı rolünü tutacak state
 }
 
 export default class Bat extends React.Component<IBatProps, IBatState> {
   constructor(props: IBatProps) {
     super(props);
     this.state = {
+      isAdmin: false,
       isAdminPanelVisible: false,
       isDepartmentManagerVisible: false,
       searchQuery: "",
@@ -41,14 +44,36 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       folders: [],
       selectedDepartment: "", // Başlangıçta seçilen departman
       isSearching: false,
+      userRole: '', // Başlangıçta kullanıcı rolü boş
     };
   }
 
+  private getUserRole = async (): Promise<string> => {
+    return 'Admin'; 
+  };
+
+  // Kullanıcı rolünü alacak fonksiyon
+  private fetchUserRole = async (): Promise<void> => {
+    try {
+      const role = await this.getUserRole(); // getUserRole fonksiyonunu çağırıyoruz
+      if (role === "Admin") {
+        this.setState({ isAdmin: true }); // Eğer admin ise, state güncelleniyor
+      }
+      this.setState({ userRole: role }); // Kullanıcı rolünü state'e kaydediyoruz
+    } catch (error) {
+      console.error("Rol alınırken hata oluştu:", error);
+    }
+  };
+
   private toggleAdminPanel = (): void => {
-    this.setState((prevState) => ({
-      isAdminPanelVisible: !prevState.isAdminPanelVisible,
-      isDepartmentManagerVisible: false,
-    }));
+    this.setState((prevState) => {
+      const newState = {
+        isAdminPanelVisible: !prevState.isAdminPanelVisible,
+        isDepartmentManagerVisible: false,
+      };
+      console.log("Admin Panel Toggled:", newState.isAdminPanelVisible); // Kontrol etmek için
+      return newState;
+    });
   };
 
   private toggleDepartmentManager = (): void => {
@@ -188,11 +213,13 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
 
   componentDidMount(): void {
     this.fetchFolders();
+    this.fetchUserRole();
   }
 
   public render(): React.ReactElement<IBatProps> {
+    console.log("Current User Role:", this.state.userRole); // Rolü burada kontrol edin
     const {
-      isAdminPanelVisible,
+      isAdminPanelVisible= this.state,
       isDepartmentManagerVisible,
       searchQuery,
       searchResults,
@@ -219,12 +246,15 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
               className={styles.searchButton}
               disabled={isSearching}
             />
-            <button
-              className={styles.adminButton}
-              onClick={this.toggleAdminPanel}
-            >
-              {isAdminPanelVisible ? "Ana Sayfa" : "Admin Panel"}
-            </button>
+            
+            {/* Hide Admin Panel button if user is not admin */}
+            {this.state.userRole === "Admin" && (
+            <PrimaryButton
+                text="Admin Panel"
+                onClick={this.toggleAdminPanel}
+                className={styles.adminButton}
+              />
+          )}
             <button
               className={styles.managerButton}
               onClick={this.toggleDepartmentManager}
@@ -233,49 +263,50 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
             </button>
           </div>
         </header>
-    
+         {/* Admin Paneli */}
+         {isAdminPanelVisible && AdminPanel}
         {/* Content Section */}
         {!isAdminPanelVisible && !isDepartmentManagerVisible ? (
-          <div>
-            <div className={styles.folderList}>
-              <h2>Available Folders</h2>
-              {folders.length > 0 ? (
-                folders.map((folder) => (
-                  <div
-                    key={folder.Name}
-                    className={styles.folderItem}
-                    onClick={() => this.handleFolderClick(folder)}
-                  >
-                    {folder.Name}
-                  </div>
-                ))
-              ) : (
-                <p>No folders found.</p>
-              )}
-            </div>
-            <div className={styles.searchResults}>
-              <h3>Arama Sonuçları</h3>
-              {isSearching ? (
-                <p>Aranıyor...</p>
-              ) : searchResults.length > 0 ? (
-                <ul>
-                  {searchResults.map((result, index) => (
-                    <li key={index}>
-                      <a
-                        href={result.Path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {result.Title} ({result.FileType})
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Sonuç bulunamadı.</p>
-              )}
-            </div>
+  <div>
+    <div className={styles.folderList}>
+      <h2>Available Folders</h2>
+      {folders.length > 0 ? (
+        folders.map((folder) => (
+          <div
+            key={folder.Name}
+            className={styles.folderItem}
+            onClick={() => this.handleFolderClick(folder)}
+          >
+            {folder.Name}
           </div>
+        ))
+      ) : (
+        <p>No folders found.</p>
+      )}
+    </div>
+    <div className={styles.searchResults}>
+      <h3>Arama Sonuçları</h3>
+      {isSearching ? (
+        <p>Aranıyor...</p>
+      ) : searchResults.length > 0 ? (
+        <ul>
+          {searchResults.map((result, index) => (
+            <li key={index}>
+              <a
+                href={result.Path}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {result.Title} ({result.FileType})
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Sonuç bulunamadı.</p>
+      )}
+    </div>
+  </div>
         ) : isAdminPanelVisible ? (
           <AdminPanel
             siteUrl={this.props.siteUrl}

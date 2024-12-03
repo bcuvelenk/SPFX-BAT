@@ -91,39 +91,39 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
   
   // Rename (update) a folder
   private updateFolder = async (): Promise<void> => {
-  const { siteUrl, spHttpClient } = this.props;
-  const { oldFolderName, newFolderName } = this.state;
+    const { siteUrl, spHttpClient } = this.props;
+    const { oldFolderName, newFolderName } = this.state;
 
-  if (!oldFolderName || !newFolderName) {
-    this.setState({ error: 'Please enter both old and new folder names.' });
-    return;
-  }
-
-  try {
-    const folderPath = `/sites/GorevYonetimi/BAT/${oldFolderName}`;
-    const newFolderPath = `/sites/GorevYonetimi/BAT/${newFolderName}`;
-
-    const endpoint = `${siteUrl}/_api/web/GetFolderByServerRelativeUrl('${folderPath}')/MoveTo(newUrl='${newFolderPath}')`;
-
-    const response: SPHttpClientResponse = await spHttpClient.post(endpoint, SPHttpClient.configurations.v1, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.ok) {
-      this.setState({ oldFolderName: '', newFolderName: '', successMessage: 'Folder renamed successfully.', error: null });
-      this.fetchFolders();
-    } else {
-      const errorData = await response.json();
-      this.setState({ error: errorData.error.message, successMessage: null });
+    if (!oldFolderName || !newFolderName) {
+      this.setState({ error: 'Please enter both old and new folder names.' });
+      return;
     }
-  } catch (error) {
-    console.error('Error renaming folder:', error);
-    this.setState({ error: 'Error renaming folder. Please try again.', successMessage: null });
-  }
-};
+
+    try {
+      const folderPath = `/sites/GorevYonetimi/BAT/${oldFolderName}`;
+      const newFolderPath = `/sites/GorevYonetimi/BAT/${newFolderName}`;
+
+      const endpoint = `${siteUrl}/_api/web/GetFolderByServerRelativeUrl('${folderPath}')/MoveTo(newUrl='${newFolderPath}')`;
+
+      const response: SPHttpClientResponse = await spHttpClient.post(endpoint, SPHttpClient.configurations.v1, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        this.setState({ oldFolderName: '', newFolderName: '', successMessage: 'Folder renamed successfully.', error: null });
+        this.fetchFolders();
+      } else {
+        const errorData = await response.json();
+        this.setState({ error: errorData.error.message, successMessage: null });
+      }
+    } catch (error) {
+      console.error('Error renaming folder:', error);
+      this.setState({ error: 'Error renaming folder. Please try again.', successMessage: null });
+    }
+  };
 
 private deleteFolder = async (folderName: string): Promise<void> => {
   const { siteUrl, spHttpClient } = this.props;
@@ -160,6 +160,18 @@ private handleDeleteFolder = (folderName: string): void => {
     this.deleteFolder(folderName);
   }
 };
+
+private handleUpdateClick = (folder: string): void => {
+  const newFolderName = prompt('Please enter the new folder name:', folder);
+  
+  if (newFolderName && newFolderName !== folder) {
+    if (window.confirm('Are you sure you want to update the folder name?')) {
+      this.setState({ oldFolderName: folder, newFolderName });
+      this.updateFolder();
+    }
+  }
+};
+
   componentDidMount(): void {
     this.fetchFolders();
   }
@@ -175,7 +187,17 @@ private handleDeleteFolder = (folderName: string): void => {
         <div>
           <h2>Folders</h2>
           {folders.length > 0 ? (
-            folders.map((folder, index) => <p key={index}>{folder}</p>)
+            folders.map((folder, index) => (
+              <div key={index}>
+                <span>{folder}</span>
+                <button onClick={() => this.handleUpdateClick(folder)} style={{ color: 'blue' }}>
+                  ✏️ {/* Kalem ikonu */}
+                </button>
+                <button onClick={() => this.handleDeleteFolder(folder)} style={{ color: 'red' }}>
+                  Delete
+                </button>
+              </div>
+            ))
           ) : (
             <p>No folders found.</p>
           )}
@@ -192,41 +214,6 @@ private handleDeleteFolder = (folderName: string): void => {
           />
           <button onClick={this.createFolder}>Add</button>
         </div>
-
-        {/* Rename Folder */}
-        <div>
-          <h3>Rename Folder</h3>
-          <input
-            type="text"
-            value={this.state.oldFolderName} // Doğru değişken kullanıldı
-            onChange={(e) => this.setState({ oldFolderName: e.target.value })}
-            placeholder="Old folder name"
-          />
-          <input
-            type="text"
-            value={this.state.newFolderName} // newFolderName kullanılıyor
-            onChange={(e) => this.setState({ newFolderName: e.target.value })}
-            placeholder="New folder name"
-          />
-          <button onClick={this.updateFolder }>Rename</button>
-        </div>
-
-        {/* Folder List */}
-      <div>
-        <h2>Folders</h2>
-        {folders.length > 0 ? (
-          folders.map((folder, index) => (
-            <p key={index}>
-              {folder}{' '}
-              <button onClick={() => this.handleDeleteFolder(folder)} style={{ color: 'red' }}>
-                Delete
-              </button>
-            </p>
-          ))
-        ) : (
-          <p>No folders found.</p>
-        )}
-      </div>
 
         {/* Success and Error Messages */}
         {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
