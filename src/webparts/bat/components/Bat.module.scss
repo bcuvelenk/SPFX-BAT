@@ -1,10 +1,10 @@
 @import '~@fluentui/react/dist/sass/References.scss';
 
-.bat {
-  font-family: 'Montserrat';
-  text-align: center;
-  background-color: #f4f4f4;
-  padding: 20px;
+$first_color : #0e2b63;
+$second_color: #f4f4f4;
+
+.box{
+ width: 100%;
 }
 
 .teams {
@@ -12,26 +12,15 @@
   color: white;
 }
 
-/* Header Section */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #0e2b63;;
-  color: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-}
-
-.header h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.headerRight {
-  display: flex;
-  align-items: center;
+.buttons{
+  margin-left: 10px;
+    padding: 8px;
+    border-radius: 25px;
+    border: 0 solid #253066;
+    color: #253066;
+    font-weight: 600;
+    cursor: pointer;
+    width: auto;
 }
 
 .searchInput {
@@ -40,40 +29,32 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  width: 200px;
+  width: 60%;
 }
 
-
-/* Folder Section */
-.folderSection {
-  margin-top: 30px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
+.cardcontent{
+  height: 40%;
+  text-align: center;
+  color: rgb(255, 255, 255);
 }
 
-.folderContainer {
+.cardArea{
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px #0e2b63;
-  transition: transform 0.2s, box-shadow 0.2s;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 15px;
+    justify-content: center;
+    margin-top: 25px;
+
 }
 
-.folderContainer:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px #0e2b63;
+.cardBox{
+  background-color: $first_color;
+  width: 100px;
+  height: 100px;
+  border-radius: 25px;
 }
 
-.folderIcon {
-  font-size: 36px;
-  color: #0e2b63;
-  margin-bottom: 10px;
-}
 
 .folderName {
   font-size: 16px;
@@ -83,14 +64,6 @@
   text-decoration: none;
 }
 
-.folderName a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.folderName a:hover {
-  text-decoration: underline;
-}
 
 .folderItem {
   cursor: pointer;
@@ -117,19 +90,7 @@
     background-color: #f1f1f1;
   }
 }
-.adminButton {
-  background-color: #0078d4; /* Örnek bir renk */
-  color: white;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.3s ease;
 
-  &:hover {
-    background-color: #005a8c; /* Hover efekti */
-  }
-}
 .adminContent {
   padding: 20px;
   background-color: #f4f4f4;
@@ -138,6 +99,37 @@
 }
 .formGroup {
   margin-bottom: 20px;
+}
+
+.table{
+  width: 100%;
+}
+
+.tableTitles{
+  color: white;
+  background-color: $first_color;
+  border-radius: 25px;
+  margin-top: 25px;
+  min-width: 15%;
+  padding: 5px;
+}
+
+.tableItems{
+  color:$first_color;
+  background-color: #f5f5f5;
+  border-radius: 25px;
+  margin-bottom: 3px;
+  padding: 5px;
+}
+
+.tableItems td{
+  padding: 5px;
+}
+
+.tableItems button{
+  width: 100%;
+  border:0;
+  cursor: pointer;
 }
 
 .backButton {
@@ -156,25 +148,6 @@
   background-color: #c0392b;
 }
 
-/* Typography */
-h3 {
-  font-size: 24px;
-  color: #0e2b63;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-h4 {
-  font-size: 20px;
-  color: #666;
-  font-weight: 400;
-}
-
-p {
-  font-size: 16px;
-  color: #333;
-  line-height: 1.6;
-}
 
 .uploadButton {
   background-color: #4caf50; /* Yeşil renk */
@@ -207,9 +180,25 @@ p {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   }
 }
-.folderList {
-  margin-top: 20px;
+/*.categoryList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding: 15px;
+  justify-content: center;
+}*/
+.folderList{
+  width: 120px;
+  height: 120px;
+  border: 1 solid black;
+  border-radius: 30%;
+  cursor: pointer;
 }
+.folderList:hover{
+  box-shadow: 5px 5px 5px gray;
+  transition: box-shadow 0.2s;
+}
+
 
 .folderItem {
   margin: 5px 0;
@@ -235,18 +224,26 @@ p {
   text-decoration: underline;
 }
 .searchButton {
-  background-color: #0078d4;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 8px;
+  border-radius: 25px;
+  border: 0 solid #253066;
+  color: #253066;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  width: auto;
 }
- 
-.searchButton:hover {
-  background-color: #005a9e;
+.cardicon{
+  height: 30%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top:28px ;
+}
+
+.cardicon img{
+width: 100%;
+margin-bottom: 20px;
 }
 
 .managerButton {
@@ -389,4 +386,71 @@ p {
   color: red;
   font-weight: bold;
   margin-top: 10px;
+}
+
+
+/* Osman*/
+.navlogo {
+  width: 120px;
+}
+
+.nav {
+  width: 100%;
+  height: 50px;
+  margin-top: 5px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h3{
+  color: $first_color;
+  padding-left: 5px;
+  font-size: 1rem;
+}
+
+.navsearch {
+  width: 40%;
+  position: relative;
+}
+
+.navsearch input {
+  width: 100%;
+  height: 25px;
+  border-radius: 50px;
+  border-width: 0;
+  background-color: #efefef;
+  color: #253066;
+  font-size: 0.8rem;
+  padding: 5px;
+  padding-left: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.navsearchicon {
+  width: 20px;
+  position: absolute;
+  top: 7px;
+  right: 0px;
+  left: 95%;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.nav button {
+  margin-left: 10px;
+  padding: 10px;
+  border-radius: 25px;
+  border: 0 solid #253066;
+  color: #253066;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+.nav button:hover {
+  box-shadow: 2px 2px 5px #253066;
+  transition: box-shadow 0.2s;
 }

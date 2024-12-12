@@ -2,11 +2,18 @@ import * as React from "react";
 import styles from "./Bat.module.scss";
 import { IBatProps } from "./IBatProps";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { PrimaryButton, TextField } from "@fluentui/react";
 import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
 import { IDropdownOption } from "@fluentui/react";
 import AdminPanel from "./AdminPanel"; // AdminPanel bileşenini içe aktar
 import DepartmentManager from "./DepartmentManager"; // DepartmentManager bileşenini içe aktar
+import logo from "../assets/logo.png";
+import searchIcon from "../assets/SearchIcon.svg";
+import icon from "../assets/FolderIcon.svg"
+import spinner from "../assets/spinner.svg"
+import fileIcon from "../assets/FileIcon.svg"
+import home from "../assets/Home.svg"
+
+
 
 
 interface SearchResult {
@@ -48,6 +55,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     };
   }
 
+
   private getUserRole = async (): Promise<string> => {
     return 'Admin'; 
   };
@@ -83,6 +91,14 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     }));
   };
 
+  private toggleHome = (): void => {
+    this.setState((prevState) => ({
+      isDepartmentManagerVisible: false,
+      isAdminPanelVisible: false, 
+      
+    }));
+  };
+
   private handleSearchChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -92,6 +108,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
   private handleSearch = async (): Promise<void> => {
     const { searchQuery } = this.state;
     const { siteUrl, spHttpClient } = this.props;
+    
 
     if (!searchQuery) {
       alert("Lütfen bir arama terimi girin.");
@@ -158,9 +175,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     }
   };
 
-  private handleFolderClick = (folder: Folder): void => {
-    console.log(`Klasör tıklandı: ${folder.Name}`);
-  };
+
 
   private handleDepartmentChange = (
     event: React.FormEvent<HTMLDivElement>,
@@ -229,83 +244,122 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     } = this.state;
 
     return (
-      <div className={styles.bat}>
+      <div className={styles.box}>
         {/* Header Section */}
-        <header className={styles.header}>
-          <h1>Samsun Training Document Center</h1>
-          <div className={styles.headerRight}>
-            <TextField
-              value={searchQuery}
-              onChange={this.handleSearchChange}
-              placeholder="Search documents..."
-              className={styles.searchInput}
-            />
-            <PrimaryButton
-              text="Ara"
-              onClick={this.handleSearch}
-              className={styles.searchButton}
-              disabled={isSearching}
-            />
-            
+        <nav className={styles.nav}>
+        <img className={styles.navlogo} src={logo} alt="BAT Logosu" />
+        {
+          !(isAdminPanelVisible || isDepartmentManagerVisible) ? <div className={styles.navsearch}>
+          <input
+            value={searchQuery}
+            onChange={this.handleSearchChange}
+            placeholder="Search..."
+            className={styles.searchInput}
+          />{/*<button
+            onClick={this.handleSearch}
+            className={styles.searchButton}
+            disabled={isSearching}
+            >
+            Ara
+          </button>*/}
+          <img onClick={this.handleSearch} className={styles.navsearchicon} src={searchIcon} alt="Search Icon" />
+          </div>:""
+        }
             {/* Hide Admin Panel button if user is not admin */}
-            {this.state.userRole === "Admin" && (
-            <PrimaryButton
-                text="Admin Panel"
-                onClick={this.toggleAdminPanel}
-                className={styles.adminButton}
-              />
-          )}
+           <div style={{display:"flex"}}>
+           {this.state.userRole === "Admin" && !isAdminPanelVisible ? (
             <button
-              className={styles.managerButton}
+                onClick={this.toggleAdminPanel}
+                className={styles.buttons}
+                >
+                Admin Paneli
+              </button>
+          ):""}
+            {
+              !isDepartmentManagerVisible ? <button
+              className={styles.buttons}
               onClick={this.toggleDepartmentManager}
             >
-              {isDepartmentManagerVisible ? "Ana Sayfa" : "Döküman Panel"}
-            </button>
-          </div>
-        </header>
+               Döküman Panel
+            </button>:""
+            }
+            {
+              isAdminPanelVisible || isDepartmentManagerVisible ? <button onClick={this.toggleHome}>
+              <img src={home} style={{width:"20px"}} alt="" />
+            </button>:"" 
+            }
+           </div>
+       
+        </nav>
          {/* Admin Paneli */}
          {isAdminPanelVisible && AdminPanel}
         {/* Content Section */}
         {!isAdminPanelVisible && !isDepartmentManagerVisible ? (
   <div>
-    <div className={styles.folderList}>
-      <h2>Available Folders</h2>
-      {folders.length > 0 ? (
-        folders.map((folder) => (
-          <div
-            key={folder.Name}
-            className={styles.folderItem}
-            onClick={() => this.handleFolderClick(folder)}
-          >
-            {folder.Name}
-          </div>
-        ))
-      ) : (
-        <p>No folders found.</p>
-      )}
+
+    <div>
+     
+      {
+        !searchQuery ? <div className={styles.cardArea}>
+        {folders.length > 0 ? (
+          folders.map((folder,index) => (
+            <div key={index} className={styles.cardBox}>
+                 <a href={`https://renksistem.sharepoint.com/sites/GorevYonetimi/BAT/${folder.Name}`} target="_blank">
+                 <div className={styles.cardicon}>
+                       <img style={{ width: "50%" }} src={icon} alt="folder-icon" />
+                   </div>
+                   <div className={styles.cardcontent}>
+                      {folder.Name}
+                   </div>
+                 </a>
+            </div>
+          ))
+        ) : (
+          <p>No folders found.</p>
+        )}
+  
+      </div>: ""
+      }
     </div>
-    <div className={styles.searchResults}>
+    {
+      searchQuery ? <div className={styles.searchResults}>
       <h3>Arama Sonuçları</h3>
       {isSearching ? (
-        <p>Aranıyor...</p>
+        <div style={{width:"100%",display:"flex",justifyContent:"center",alignItems:"center",height:"300px"}}>
+           <img src={spinner} alt="" />
+        </div>
       ) : searchResults.length > 0 ? (
-        <ul>
-          {searchResults.map((result, index) => (
-            <li key={index}>
-              <a
-                href={result.Path}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {result.Title} ({result.FileType})
-              </a>
-            </li>
+        <table className={styles.table}>
+           <tr className={styles.tableTitles}>
+              <th>Dosya</th>
+              <th>Oluşturan</th>
+              <th>Tarih</th>
+              <th>Dosya Tipi</th>
+              <th>Dil</th>
+              <th></th>
+           </tr>
+           {searchResults.map((result, index) => (
+            <tr key={index} className={styles.tableItems}>
+              <td>{result.Title}</td>
+              <td>Pelda & Buket</td>
+              <td>01.01.2002</td>
+              <td>{result.FileType}</td>
+              <td>Türkçe</td>
+              <td>
+                 <a href={result.Path} target="_blank">
+                   <button>
+                     <img style={{width:"35px"}} src={fileIcon} alt="" />
+                   </button>
+                 </a>
+              </td>
+            </tr>
           ))}
-        </ul>
+        </table>
       ) : (
-        <p>Sonuç bulunamadı.</p>
+        ""
       )}
-    </div>
+    </div>:""
+    }
   </div>
         ) : isAdminPanelVisible ? (
           <AdminPanel

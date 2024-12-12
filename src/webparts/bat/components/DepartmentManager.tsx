@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+import FolderItem from './Folders';
+import blueFolder from "../assets/blueFolderIcon.svg"
 
 
 
@@ -181,31 +183,11 @@ private handleUpdateClick = (folder: string): void => {
 
     return (
       <div>
-        <h1>Manage Departments</h1>
 
-        {/* Folder List */}
-        <div>
-          <h2>Folders</h2>
-          {folders.length > 0 ? (
-            folders.map((folder, index) => (
-              <div key={index}>
-                <span>{folder}</span>
-                <button onClick={() => this.handleUpdateClick(folder)} style={{ color: 'blue' }}>
-                  ✏️ {/* Kalem ikonu */}
-                </button>
-                <button onClick={() => this.handleDeleteFolder(folder)} style={{ color: 'red' }}>
-                  Delete
-                </button>
-              </div>
-            ))
-          ) : (
-            <p>No folders found.</p>
-          )}
-        </div>
-
+        
         {/* Add New Folder */}
         <div>
-          <h3>Add Folder</h3>
+          <h3>Departman Ekle</h3>
           <input
             type="text"
             value={folderName}
@@ -218,6 +200,23 @@ private handleUpdateClick = (folder: string): void => {
         {/* Success and Error Messages */}
         {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
+        
+        {/* Folder List */}
+        <div>
+          <h3>Departmanlar</h3>
+          <hr />
+          <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+          {folders.length > 0 ? (
+            folders.map((folder, index) => (
+              
+                <FolderItem icon={blueFolder} name={folder} key={index} handleDelete={this.handleDeleteFolder} handleUpdate={this.handleUpdateClick}/>
+              
+            ))
+          ) : (
+            <p>No folders found.</p>
+          )}
+          </div>
+        </div>
       </div>
     );
   }
