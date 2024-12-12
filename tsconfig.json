@@ -3,6 +3,8 @@
   "compilerOptions": {
     "target": "es5",
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true, // JSON modüllerini destekler
+    "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "moduleResolution": "node",
     "jsx": "react",
@@ -23,6 +25,7 @@
     ],
     "lib": [
       "dom",
+      "es5",
       "es2015",
       "es2015.collection",
       "es2015.promise"

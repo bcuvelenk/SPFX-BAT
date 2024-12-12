@@ -3,8 +3,6 @@ import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import FolderItem from './Folders';
 import blueFolder from "../assets/blueFolderIcon.svg"
 
-
-
 interface IDepartmentManagerProps {
   siteUrl: string;
   spHttpClient: SPHttpClient;
@@ -18,6 +16,7 @@ interface IDepartmentManagerState {
   error: string | null;
   successMessage: string | null;
 }
+
 
 export default class DepartmentManager extends React.Component<IDepartmentManagerProps, IDepartmentManagerState> {
   constructor(props: IDepartmentManagerProps) {
@@ -181,21 +180,29 @@ private handleUpdateClick = (folder: string): void => {
   render(): React.ReactElement<IDepartmentManagerProps> {
     const { folders, folderName, error, successMessage } = this.state;
 
+
     return (
       <div>
-
-        
         {/* Add New Folder */}
         <div>
           <h3>Departman Ekle</h3>
-          <input
-            type="text"
-            value={folderName}
-            onChange={(e) => this.setState({ folderName: e.target.value })}
-            placeholder="New folder name"
-          />
-          <button onClick={this.createFolder}>Add</button>
+           <div className='department-form'>
+              <input
+              type="text"
+              value={folderName}
+              onChange={(e) => this.setState({ folderName: e.target.value })}
+              placeholder="New folder name"
+              />
+              <button onClick={this.createFolder}>💾 Kaydet</button>
+           </div>
+          
         </div>
+      
+        {/* Success and Error Messages */}
+        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+
 
         {/* Success and Error Messages */}
         {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
@@ -205,7 +212,7 @@ private handleUpdateClick = (folder: string): void => {
         <div>
           <h3>Departmanlar</h3>
           <hr />
-          <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"4px",maxHeight:"400px",overflowY:"auto"}}>
           {folders.length > 0 ? (
             folders.map((folder, index) => (
               

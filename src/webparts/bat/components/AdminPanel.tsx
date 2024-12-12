@@ -1,7 +1,8 @@
 import * as React from "react";
-import { PrimaryButton, Dropdown, IDropdownOption } from "@fluentui/react";
+import {  Dropdown, IDropdownOption } from "@fluentui/react";
 import { Folder } from "./Bat";
 import { getCurrentUser, getUserRole } from "./userHelpers";
+import "./AdminComponents.css"
 
 interface IAdminPanelProps {
   siteUrl: string;
@@ -151,11 +152,13 @@ const AdminPanel: React.FunctionComponent<IAdminPanelProps> = ({
   }
 
   return (
-    <div>
+    <div className="form">
+        <form action="submit" style={{width:"50%"}}>
       <h2>Admin Panel</h2>
-      <div>
+      <div className="dropdown">
         <Dropdown
           label="Departman Seç"
+          style={{border:0,backgroundColor:"f5f5f5"}}
           options={folders.map(
             (folder) =>
               ({ key: folder.Name, text: folder.Name } as IDropdownOption)
@@ -164,7 +167,7 @@ const AdminPanel: React.FunctionComponent<IAdminPanelProps> = ({
           onChange={onDepartmentChange}
         />
       </div>
-      <div>
+      <div className="dropdown">
         <Dropdown
           label="Dil Seçimi"
           options={[
@@ -176,13 +179,30 @@ const AdminPanel: React.FunctionComponent<IAdminPanelProps> = ({
         />
       </div>
       <div>
-        <input type="file" onChange={handleFileChange} />
-        <PrimaryButton
+        {/*<input type="file" onChange={handleFileChange} />*/}
+        <label htmlFor="upload-doc" className='label'>Dosya Seç:</label> <br/>
+        <div className='attachment'>
+          <input
+            type="file"
+            name="upload-doc"
+            id="upload-doc"
+            onChange={handleFileChange}
+          />
+          <p>{selectedFile?.name ? selectedFile?.name : "Bir dosyayı sürükleyiniz yada tıklayınız."}</p>
+        </div>
+        <br/>
+
+        <div className='button-save'>
+          <button type="button" onClick={handleUploadClick}
+          disabled={uploading || !selectedFile || !selectedDepartment}>{uploading ? "Kaydediliyor..." : "Kaydet"}</button>
+        </div>
+       {/* <PrimaryButton
           text={uploading ? "Yükleniyor..." : "Yükle"}
           onClick={handleUploadClick}
           disabled={uploading || !selectedFile || !selectedDepartment}
-        />
+        />*/}
       </div>
+    </form>
     </div>
   );
 };

@@ -17,6 +17,8 @@ import { IBatProps } from "./components/IBatProps";
 import { spfi, SPFx } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/folders";
+
+
  
 export interface IBatWebPartProps {
   description: string;
@@ -66,6 +68,7 @@ export default class BatWebPart extends BaseClientSideWebPart<IBatWebPartProps> 
           folders: folders, // Klasör listesi
           siteUrl: this.context.pageContext.web.absoluteUrl, // siteUrl özelliği
           spHttpClient: this.context.spHttpClient, // spHttpClient özelliği
+          context: this.context
         }
       );
  

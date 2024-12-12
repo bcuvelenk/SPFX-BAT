@@ -8,12 +8,10 @@ import AdminPanel from "./AdminPanel"; // AdminPanel bileşenini içe aktar
 import DepartmentManager from "./DepartmentManager"; // DepartmentManager bileşenini içe aktar
 import logo from "../assets/logo.png";
 import searchIcon from "../assets/SearchIcon.svg";
-import icon from "../assets/FolderIcon.svg"
+import icon from "../assets/blueFolderIcon.svg"
 import spinner from "../assets/spinner.svg"
 import fileIcon from "../assets/FileIcon.svg"
 import home from "../assets/Home.svg"
-
-
 
 
 interface SearchResult {
@@ -26,6 +24,7 @@ export interface Folder {
   Name: string;
   ServerRelativeUrl: string;
 }
+
 
 interface IBatState {
   isAdmin: boolean;
@@ -54,7 +53,6 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       userRole: '', // Başlangıçta kullanıcı rolü boş
     };
   }
-
 
   private getUserRole = async (): Promise<string> => {
     return 'Admin'; 
@@ -242,7 +240,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       folders,
       selectedDepartment,
     } = this.state;
-
+    
     return (
       <div className={styles.box}>
         {/* Header Section */}
@@ -291,6 +289,9 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
            </div>
        
         </nav>
+
+        
+
          {/* Admin Paneli */}
          {isAdminPanelVisible && AdminPanel}
         {/* Content Section */}
@@ -309,7 +310,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
                        <img style={{ width: "50%" }} src={icon} alt="folder-icon" />
                    </div>
                    <div className={styles.cardcontent}>
-                      {folder.Name}
+                      <p>{folder.Name}</p>
                    </div>
                  </a>
             </div>
@@ -323,38 +324,46 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     </div>
     {
       searchQuery ? <div className={styles.searchResults}>
-      <h3>Arama Sonuçları</h3>
+      <div style={{textAlign:"center"}}>
+        <h3>Arama Sonuçları</h3>
+      </div>
       {isSearching ? (
         <div style={{width:"100%",display:"flex",justifyContent:"center",alignItems:"center",height:"300px"}}>
            <img src={spinner} alt="" />
         </div>
       ) : searchResults.length > 0 ? (
+        <div style={{maxHeight: "500px",overflowY: "auto"}}>
         <table className={styles.table}>
-           <tr className={styles.tableTitles}>
+          <thead>
+            <tr className={styles.tableTitles}>
               <th>Dosya</th>
               <th>Oluşturan</th>
               <th>Tarih</th>
               <th>Dosya Tipi</th>
               <th>Dil</th>
               <th></th>
-           </tr>
-           {searchResults.map((result, index) => (
-            <tr key={index} className={styles.tableItems}>
-              <td>{result.Title}</td>
-              <td>Pelda & Buket</td>
-              <td>01.01.2002</td>
-              <td>{result.FileType}</td>
-              <td>Türkçe</td>
-              <td>
-                 <a href={result.Path} target="_blank">
-                   <button>
-                     <img style={{width:"35px"}} src={fileIcon} alt="" />
-                   </button>
-                 </a>
-              </td>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {searchResults.map((result, index) => (
+              <tr key={index} className={styles.tableItems}>
+                <td>{result.Title}</td>
+                <td>Pelda & Buket</td>
+                <td>01.01.2002</td>
+                <td>{result.FileType}</td>
+                <td>Türkçe</td>
+                <td>
+                  <a href={result.Path} target="_blank">
+                    <button>
+                      <img style={{width:"35px"}} src={fileIcon} alt="" />
+                    </button>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
+      </div>
       ) : (
         ""
       )}

@@ -1,4 +1,5 @@
 import { SPHttpClient } from '@microsoft/sp-http';
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface IBatProps {
   description: string;
@@ -12,4 +13,5 @@ export interface IBatProps {
   }>;
   siteUrl: string; // siteUrl özelliği eklendi
   spHttpClient: SPHttpClient; // SPHttpClient özelliği eklendi
+  context: WebPartContext;
 }

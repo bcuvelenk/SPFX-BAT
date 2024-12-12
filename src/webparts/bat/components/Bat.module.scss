@@ -1,7 +1,7 @@
 @import '~@fluentui/react/dist/sass/References.scss';
 
 $first_color : #0e2b63;
-$second_color: #f4f4f4;
+$second_color: #f5f5f5;
 
 .box{
  width: 100%;
@@ -35,21 +35,24 @@ $second_color: #f4f4f4;
 .cardcontent{
   height: 40%;
   text-align: center;
-  color: rgb(255, 255, 255);
+  color: $first_color;
+  max-width: 100px;
 }
 
 .cardArea{
   display: flex;
     flex-wrap: wrap;
-    gap: 25px;
-    padding: 15px;
+    gap: 5px;
+    padding: 10px;
     justify-content: center;
     margin-top: 25px;
+    max-height: 500px;
+    overflow-y: auto;
 
 }
 
 .cardBox{
-  background-color: $first_color;
+  background-color: white;
   width: 100px;
   height: 100px;
   border-radius: 25px;
@@ -105,6 +108,12 @@ $second_color: #f4f4f4;
   width: 100%;
 }
 
+.tableScoor{
+  overflow-y: scroll;
+  max-height: 400px;
+}
+
+
 .tableTitles{
   color: white;
   background-color: $first_color;
@@ -116,10 +125,11 @@ $second_color: #f4f4f4;
 
 .tableItems{
   color:$first_color;
-  background-color: #f5f5f5;
+  background-color: $second_color;
   border-radius: 25px;
   margin-bottom: 3px;
   padding: 5px;
+  box-shadow: 1px 1px 1px $second_color;
 }
 
 .tableItems td{
@@ -233,17 +243,17 @@ $second_color: #f4f4f4;
   width: auto;
 }
 .cardicon{
-  height: 30%;
+  height: 50%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top:28px ;
+  padding-top:0px ;
 }
 
 .cardicon img{
 width: 100%;
-margin-bottom: 20px;
+margin-bottom: 0px;
 }
 
 .managerButton {
@@ -453,4 +463,54 @@ h3{
 .nav button:hover {
   box-shadow: 2px 2px 5px #253066;
   transition: box-shadow 0.2s;
+}
+
+
+
+.dokumanYukle {
+  margin: 20px;
+}
+
+.dokumanYukle h3 {
+  color: #0078d4; /* SharePoint mavisi */
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.dokumanYukle .dropdown {
+  width: 300px;
+}
+.uploadSection {
+  margin: 20px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.uploadInput {
+  display: block;
+  margin: 10px auto;
+}
+
+.uploadButton {
+  background-color: #0078d4;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.uploadButton:hover {
+  background-color: #005a9e;
+}
+
+.languageInput {
+  padding: 8px;
+  font-size: 14px;
+  margin: 10px 0;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
