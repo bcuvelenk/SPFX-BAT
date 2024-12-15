@@ -3,7 +3,6 @@ import styles from "./Bat.module.scss";
 import { IBatProps } from "./IBatProps";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
-import { IDropdownOption } from "@fluentui/react";
 import AdminPanel from "./AdminPanel"; // AdminPanel bileşenini içe aktar
 import DepartmentManager from "./DepartmentManager"; // DepartmentManager bileşenini içe aktar
 import logo from "../assets/logo.png";
@@ -175,7 +174,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
 
 
 
-  private handleDepartmentChange = (
+  /*private handleDepartmentChange = (
     event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption
   ): void => {
@@ -184,7 +183,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     }
   };
 
-  private handleFileUpload = async (
+  private handleUploadClick = async (
     file: File,
     folder: Folder
   ): Promise<void> => {
@@ -222,7 +221,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       alert("File upload failed.");
       console.error("File upload error:", error);
     }
-  };
+  };*/
 
   componentDidMount(): void {
     this.fetchFolders();
@@ -238,7 +237,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       searchResults,
       isSearching,
       folders,
-      selectedDepartment,
+      //selectedDepartment,
     } = this.state;
     
     return (
@@ -372,12 +371,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
   </div>
         ) : isAdminPanelVisible ? (
           <AdminPanel
-            siteUrl={this.props.siteUrl}
-            spHttpClient={this.props.spHttpClient}
-            folders={folders}
-            selectedDepartment={selectedDepartment}
-            onDepartmentChange={this.handleDepartmentChange}
-            onFileUpload={this.handleFileUpload}
+          context={this.props.context}
           />
         ) : isDepartmentManagerVisible ? (
           <DepartmentManager
