@@ -8,7 +8,7 @@ export const updateDocumentLanguage = async (context: WebPartContext, itemId: nu
       Dil: text
     });
   } catch (error) {
-    console.error("Error updating document language:", error);
+    console.error("Belge dili güncellenirken hata oluştu:", error);
   }
 };
 
@@ -23,7 +23,7 @@ export const uploadFile = async (context: WebPartContext, folderName: string, fi
     // Yüklenen dosyanın URL'si üzerinden öğesine erişim
     const serverRelativeUrl = addResult.ServerRelativeUrl || addResult["odata.id"];
     if (!serverRelativeUrl) {
-      throw new Error("ServerRelativeUrl not found in upload result.");
+      throw new Error("Yükleme sonucunda ServerRelativeUrl bulunamadı.");
     }
 
     // Dosyanın list öğesine erişim
@@ -32,12 +32,12 @@ export const uploadFile = async (context: WebPartContext, folderName: string, fi
     // ID değerini al
     const itemId = uploadedItem.ID || uploadedItem.Id || uploadedItem.id;
     if (!itemId) {
-      throw new Error("ID not found in uploaded file item.");
+      throw new Error("Yüklenen dosya öğesinde kimlik bulunamadı.");
     }
 
     return itemId;
   } catch (error) {
-    console.error("Error uploading file:", error);
+    console.error("Dosya yüklenirken hata oluştu:", error);
     return -1;
   }
 };
@@ -51,7 +51,7 @@ export const getFolders = async (context: WebPartContext): Promise<string[]> => 
     const folders = await sp.web.getFolderByServerRelativePath("BAT").folders.select("Name")();
     return folders.map(folder => folder.Name);
   } catch (error) {
-    console.error("Error fetching folders:", error);
+    console.error("Klasörler getirilirken hata oluştu:", error);
     return [];
   }
 };

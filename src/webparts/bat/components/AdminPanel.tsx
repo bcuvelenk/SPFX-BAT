@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { updateDocumentLanguage, getFolders, uploadFile } from './sharepointApi';
-import './AdminPanel.module.scss'
+import styles from './AdminPanel.module.scss'
 
 export interface IAdminPanelProps {
   context: WebPartContext;
@@ -53,9 +53,9 @@ class AdminPanel extends React.Component<IAdminPanelProps, IFormState> {
         if (itemId !== -1) {
           await updateDocumentLanguage(this.props.context, itemId, selectedLanguage);
           console.log('Dosya yüklendi ve belge dil bilgisi güncellendi.');
-          alert("success");
+          alert("Dosya ve belge dili başarılı bir şekilde yüklendi.");
         } else {
-          alert("Failed to upload file");
+          alert("Dosya yüklenemedi.");
         }
       } catch (error) {
         console.error('Dosya yüklenirken veya belge dili güncellenirken hata oluştu:', error);
@@ -65,8 +65,6 @@ class AdminPanel extends React.Component<IAdminPanelProps, IFormState> {
       alert("Lütfen bir dosya seçin ve yükleyin");
     }
   }
-
-  
 
   public render(): React.ReactElement<IAdminPanelProps> {
     const { selectedFile } = this.state;
@@ -82,7 +80,8 @@ class AdminPanel extends React.Component<IAdminPanelProps, IFormState> {
                 id="folderSelect"
                 value={this.state.selectedFolder}
                 onChange={this.handleFolderChange}
-                style={{width:"100%", height:"35px", position:"relative", display:"inline-block", marginBottom:"25px",marginTop:"5px", cursor:"pointer"}}
+                className={styles['dropdown-Department']}
+               /* style={{width:"100%", height:"35px", position:"relative", display:"inline-block", marginBottom:"25px",marginTop:"5px", cursor:"pointer"}}*/
               >
                 <option value=""></option>
                 {this.state.folders.map((folder, index) => (
@@ -101,7 +100,8 @@ class AdminPanel extends React.Component<IAdminPanelProps, IFormState> {
                 id="languageSelect"
                 value={this.state.selectedLanguage}
                 onChange={this.handleLanguageChange}
-                style={{width:"100%", height:"35px", position:"relative", display:"inline-block", marginBottom:"25px",marginTop:"5px", cursor:"pointer"}}
+                className={styles['dropdown-Department']}
+                /*style={{width:"100%", height:"35px", position:"relative", display:"inline-block", marginBottom:"25px",marginTop:"5px", cursor:"pointer"}}*/
               >
                 <option value=""></option>
                 <option value="Türkçe">Türkçe</option>

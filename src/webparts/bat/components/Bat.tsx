@@ -13,9 +13,6 @@ import fileIcon from "../assets/FileIcon.svg"
 import home from "../assets/Home.svg"
 import { getUserRole } from "./userHelpers";
 
-
-
-
 interface SearchResult {
   Title: string;
   Path: string;
@@ -120,7 +117,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     
 
     if (!searchQuery) {
-      alert("Lütfen bir arama terimi girin.");
+      alert("Lütfen bir arama terimi giriniz.");
       return;
     }
 
