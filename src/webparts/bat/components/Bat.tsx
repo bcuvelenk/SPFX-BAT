@@ -1,5 +1,5 @@
 import * as React from "react";
-import styles from "./Bat.module.scss";
+import styles from "./Bat.module.scss"
 import { IBatProps } from "./IBatProps";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
@@ -11,6 +11,9 @@ import icon from "../assets/blueFolderIcon.svg"
 import spinner from "../assets/spinner.svg"
 import fileIcon from "../assets/FileIcon.svg"
 import home from "../assets/Home.svg"
+import { getUserRole } from "./userHelpers";
+
+
 
 
 interface SearchResult {
@@ -23,7 +26,6 @@ export interface Folder {
   Name: string;
   ServerRelativeUrl: string;
 }
-
 
 interface IBatState {
   isAdmin: boolean;
@@ -53,22 +55,32 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     };
   }
 
-  private getUserRole = async (): Promise<string> => {
-    return 'Admin'; 
-  };
 
-  // Kullanıcı rolünü alacak fonksiyon
+  private getCurrentUserEmail = async (): Promise<string> => {
+    const { siteUrl, spHttpClient } = this.props;
+    const response = await spHttpClient.get(
+      `${siteUrl}/_api/web/currentuser?$select=Email`,
+      SPHttpClient.configurations.v1
+    );
+    const data = await response.json();
+    return data.Email;
+  };
+  
   private fetchUserRole = async (): Promise<void> => {
     try {
-      const role = await this.getUserRole(); // getUserRole fonksiyonunu çağırıyoruz
+      const { siteUrl } = this.props;
+      const userEmail = await this.getCurrentUserEmail(); // Kullanıcının e-posta adresini alıyoruz
+      const role = await getUserRole(siteUrl, userEmail); // getUserRole fonksiyonunu çağırıyoruz
       if (role === "Admin") {
         this.setState({ isAdmin: true }); // Eğer admin ise, state güncelleniyor
       }
-      this.setState({ userRole: role }); // Kullanıcı rolünü state'e kaydediyoruz
+      this.setState({ userRole: role ?? 'Kullanıcı' }); // Kullanıcı rolünü state'e kaydediyoruz
     } catch (error) {
       console.error("Rol alınırken hata oluştu:", error);
     }
   };
+  
+  
 
   private toggleAdminPanel = (): void => {
     this.setState((prevState) => {
@@ -173,56 +185,6 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
   };
 
 
-
-  /*private handleDepartmentChange = (
-    event: React.FormEvent<HTMLDivElement>,
-    option?: IDropdownOption
-  ): void => {
-    if (option) {
-      this.setState({ selectedDepartment: option.key.toString() });
-    }
-  };
-
-  private handleUploadClick = async (
-    file: File,
-    folder: Folder
-  ): Promise<void> => {
-    try {
-      // Convert file to ArrayBuffer
-      const arrayBuffer = await file.arrayBuffer();
-
-      // Construct endpoint
-      const endpoint = `${
-        this.props.siteUrl
-      }/_api/web/GetFolderByServerRelativeUrl('${
-        folder.ServerRelativeUrl
-      }')/Files/Add(url='${encodeURIComponent(file.name)}',overwrite=true)`;
-
-      // Perform file upload
-      const response: SPHttpClientResponse = await this.props.spHttpClient.post(
-        endpoint,
-        SPHttpClient.configurations.v1,
-        {
-          body: arrayBuffer,
-          headers: {
-            Accept: "application/json;odata=verbose",
-            "Content-Type": "application/octet-stream",
-          },
-        }
-      );
-
-      if (response.ok) {
-        alert("File uploaded successfully.");
-      } else {
-        const errorText = await response.text();
-        alert(`Error uploading file: ${errorText}`);
-      }
-    } catch (error) {
-      alert("File upload failed.");
-      console.error("File upload error:", error);
-    }
-  };*/
-
   componentDidMount(): void {
     this.fetchFolders();
     this.fetchUserRole();
@@ -237,9 +199,8 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       searchResults,
       isSearching,
       folders,
-      //selectedDepartment,
     } = this.state;
-    
+
     return (
       <div className={styles.box}>
         {/* Header Section */}
@@ -273,7 +234,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
               </button>
           ):""}
             {
-              !isDepartmentManagerVisible ? <button
+              this.state.userRole === "Admin" && !isDepartmentManagerVisible ?<button
               className={styles.buttons}
               onClick={this.toggleDepartmentManager}
             >
@@ -288,9 +249,6 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
            </div>
        
         </nav>
-
-        
-
          {/* Admin Paneli */}
          {isAdminPanelVisible && AdminPanel}
         {/* Content Section */}

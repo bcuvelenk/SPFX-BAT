@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { updateDocumentLanguage, getFolders, uploadFile } from './sharepointApi';
+import './AdminPanel.module.scss'
 
-export interface IFormProps {
+export interface IAdminPanelProps {
   context: WebPartContext;
 }
 
@@ -13,15 +14,16 @@ export interface IFormState {
   selectedFile: File | null;
 }
 
-class Form extends React.Component<IFormProps, IFormState> {
-  constructor(props: IFormProps) {
+class AdminPanel extends React.Component<IAdminPanelProps, IFormState> {
+  constructor(props: IAdminPanelProps) {
     super(props);
     this.state = {
       selectedLanguage: '',
       selectedFolder: '',
       folders: [],
-      selectedFile: null
+      selectedFile: null,
     };
+    this.handleFileChange = this.handleFileChange.bind(this); // Metodu bağlama
   }
 
   async componentDidMount() {
@@ -37,9 +39,9 @@ class Form extends React.Component<IFormProps, IFormState> {
     this.setState({ selectedFolder: event.target.value });
   }
 
-  private handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
-      this.setState({ selectedFile: event.target.files[0] });
+      this.setState({ selectedFile: event.target.files[0] }); // Seçilen dosyayı state'e ekle
     }
   }
 
@@ -50,39 +52,93 @@ class Form extends React.Component<IFormProps, IFormState> {
         const itemId = await uploadFile(this.props.context, selectedFolder, selectedFile);
         if (itemId !== -1) {
           await updateDocumentLanguage(this.props.context, itemId, selectedLanguage);
-          console.log('File uploaded and language updated');
+          console.log('Dosya yüklendi ve belge dil bilgisi güncellendi.');
           alert("success");
         } else {
           alert("Failed to upload file");
         }
       } catch (error) {
-        console.error('Error uploading file or updating document language:', error);
-        alert("Dil güncellenirken veya dosya yüklenirken bir hata oluştu");
+        console.error('Dosya yüklenirken veya belge dili güncellenirken hata oluştu:', error);
+        alert("Belge dil bilgisi güncellenirken veya dosya yüklenirken bir hata oluştu");
       }
     } else {
       alert("Lütfen bir dosya seçin ve yükleyin");
     }
   }
 
-  public render(): React.ReactElement<IFormProps> {
+  
+
+  public render(): React.ReactElement<IAdminPanelProps> {
+    const { selectedFile } = this.state;
     return (
-      <div>
-        <select value={this.state.selectedFolder} onChange={this.handleFolderChange}>
-          <option value="">Select Folder</option>
-          {this.state.folders.map((folder, index) => (
-            <option key={index} value={folder}>{folder}</option>
-          ))}
-        </select>
-        <select value={this.state.selectedLanguage} onChange={this.handleLanguageChange}>
-          <option value="">Select Language</option>
-          <option value="Türkçe">Türkçe</option>
-          <option value="English">English</option>
-        </select>
-        <input type="file" onChange={this.handleFileChange} />
-        <button type="button" onClick={this.handleButtonClick}>Gönder</button>
+      <div className="form">
+        <form action="submit" style={{ width: "50%" }}>
+          <h2>Admin Panel</h2>
+          {/* Departman Seçimi */}
+          <div className="dropdown">
+            <label htmlFor="folderSelect">Departman Seç:</label>
+            </div>
+              <select
+                id="folderSelect"
+                value={this.state.selectedFolder}
+                onChange={this.handleFolderChange}
+                style={{width:"100%", height:"35px", position:"relative", display:"inline-block", marginBottom:"25px",marginTop:"5px", cursor:"pointer"}}
+              >
+                <option value=""></option>
+                {this.state.folders.map((folder, index) => (
+                  <option key={index} value={folder}>
+                    {folder}
+                  </option>
+                ))}
+              </select>
+          
+  
+          {/* Dil Seçimi */}
+          <div className="dropdown">
+            <label htmlFor="languageSelect">Dil Seç:</label>
+            </div>
+              <select
+                id="languageSelect"
+                value={this.state.selectedLanguage}
+                onChange={this.handleLanguageChange}
+                style={{width:"100%", height:"35px", position:"relative", display:"inline-block", marginBottom:"25px",marginTop:"5px", cursor:"pointer"}}
+              >
+                <option value=""></option>
+                <option value="Türkçe">Türkçe</option>
+                <option value="İngilizce">İngilizce</option>
+              </select>
+            
+         
+  
+          {/* Dosya Yükleme */}
+          <div className="form-group">
+            <label htmlFor="upload-doc">Dosya Seç:</label>
+            <div className="attachment">
+              <input
+                type="file"
+                name="upload-doc"
+                id="upload-doc"
+                onChange={this.handleFileChange}
+              />
+              <p>
+                {selectedFile?.name
+                  ? selectedFile.name
+                  : "Bir dosyayı sürükleyiniz yada tıklayınız."}
+              </p>
+            </div>
+          </div>
+          <br></br>
+          {/* Gönder Butonu */}
+          <div className="button-save">
+            <button type="button" onClick={this.handleButtonClick} style={{backgroundColor:"#023061", borderRadius:"5px", borderWidth:"0", color:"#fff", fontSize:".8rem", fontWeight:"500px", padding:"10px"}}>
+              Kaydet
+            </button>
+        </div>
+        </form>
       </div>
+
     );
   }
 }
 
-export default Form;
+export default AdminPanel;

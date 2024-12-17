@@ -49,7 +49,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
       }
     } catch (error: any) {
       this.setState({ error: error.message });
-      console.error('Failed to fetch folders:', error);
+      console.error('Klasörler getirilemedi:', error);
     }
   };
 
@@ -58,7 +58,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
     const { folderName } = this.state;
 
     if (!folderName) {
-      this.setState({ error: 'Please enter a folder name.' });
+      this.setState({ error: 'Lütfen bir klasör adı girin.' });
       return;
     }
 
@@ -77,7 +77,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
       });
 
       if (response.ok) {
-        this.setState({ folderName: '', successMessage: 'Folder created successfully.', error: null });
+        this.setState({ folderName: '', successMessage: 'Klasör başarıyla oluşturuldu.', error: null });
         this.fetchFolders();
       } else {
         const errorData = await response.json();
@@ -85,7 +85,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
       }
     } catch (error) {
       console.error('Error creating folder:', error);
-      this.setState({ error: 'Error creating folder. Please try again.', successMessage: null });
+      this.setState({ error: 'Klasör oluşturulurken hata oluştu. Lütfen tekrar deneyin.', successMessage: null });
     }
   };
 
@@ -96,7 +96,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
     const { oldFolderName, newFolderName } = this.state;
 
     if (!oldFolderName || !newFolderName) {
-      this.setState({ error: 'Please enter both old and new folder names.' });
+      this.setState({ error: 'Lütfen hem eski hem de yeni klasör adlarını girin.' });
       return;
     }
 
@@ -114,7 +114,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
       });
 
       if (response.ok) {
-        this.setState({ oldFolderName: '', newFolderName: '', successMessage: 'Folder renamed successfully.', error: null });
+        this.setState({ oldFolderName: '', newFolderName: '', successMessage: 'Klasör başarıyla yeniden adlandırıldı.', error: null });
         this.fetchFolders();
       } else {
         const errorData = await response.json();
@@ -122,7 +122,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
       }
     } catch (error) {
       console.error('Error renaming folder:', error);
-      this.setState({ error: 'Error renaming folder. Please try again.', successMessage: null });
+      this.setState({ error: 'Klasör yeniden adlandırılırken hata oluştu. Lütfen tekrar deneyin.', successMessage: null });
     }
   };
 
@@ -143,7 +143,7 @@ private deleteFolder = async (folderName: string): Promise<void> => {
     });
 
     if (response.ok) {
-      this.setState({ successMessage: `Folder "${folderName}" deleted successfully.`, error: null });
+      this.setState({ successMessage: `Klasör "${folderName}" başarıyla silindi.`, error: null });
       this.fetchFolders();
     } else {
       const errorData = await response.json();
@@ -151,22 +151,22 @@ private deleteFolder = async (folderName: string): Promise<void> => {
     }
   } catch (error) {
     console.error('Error deleting folder:', error);
-    this.setState({ error: 'Error deleting folder. Please try again.', successMessage: null });
+    this.setState({ error: 'Klasör silinirken hata oluştu. Lütfen tekrar deneyin.', successMessage: null });
   }
 };
 
 private handleDeleteFolder = (folderName: string): void => {
-  const userConfirmed = confirm(`Are you sure you want to delete the folder "${folderName}"?`);
+  const userConfirmed = confirm(`Klasörü silmek istediğinizden emin misiniz? "${folderName}"?`);
   if (userConfirmed) {
     this.deleteFolder(folderName);
   }
 };
 
 private handleUpdateClick = (folder: string): void => {
-  const newFolderName = prompt('Please enter the new folder name:', folder);
+  const newFolderName = prompt('Lütfen yeni klasör adını girin:', folder);
   
   if (newFolderName && newFolderName !== folder) {
-    if (window.confirm('Are you sure you want to update the folder name?')) {
+    if (window.confirm('Klasör adını güncellemek istediğinizden emin misiniz?')) {
       this.setState({ oldFolderName: folder, newFolderName });
       this.updateFolder();
     }

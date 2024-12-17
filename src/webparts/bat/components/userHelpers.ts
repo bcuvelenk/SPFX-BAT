@@ -18,11 +18,11 @@ export const getCurrentUser = async (siteUrl: string): Promise<string> => {
     }
   };
   
-  export const getUserRole = async (siteUrl: string, userName: string): Promise<string | null> => {
+  export const getUserRole = async (siteUrl: string, userEmail: string): Promise<string | null> => {
     try {
-      const encodedUserName = encodeURIComponent(userName); // Kullanıcı adını URL'ye uygun hale getirin
+      const encodedUserEmail = encodeURIComponent(userEmail); // E-posta adresini URL'ye uygun hale getirin
       const response = await fetch(
-        `${siteUrl}/_api/web/lists/getbytitle('Yetki Listesi')/items?$filter=Personel/Title eq '${encodedUserName}'&$select=Yetki,Personel/Title&$expand=Personel`,
+        `${siteUrl}/_api/web/lists/getbytitle('Yetki Listesi')/items?$filter=Personel/EMail eq '${encodedUserEmail}'&$select=Yetki,Personel/EMail&$expand=Personel`,
         {
           method: "GET",
           headers: {
@@ -40,5 +40,6 @@ export const getCurrentUser = async (siteUrl: string): Promise<string> => {
       throw error;
     }
   };
+  
   
   
