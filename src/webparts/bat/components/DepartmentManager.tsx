@@ -167,8 +167,10 @@ private handleUpdateClick = (folder: string): void => {
   
   if (newFolderName && newFolderName !== folder) {
     if (window.confirm('Klasör adını güncellemek istediğinizden emin misiniz?')) {
-      this.setState({ oldFolderName: folder, newFolderName });
-      this.updateFolder();
+      this.setState(
+        { oldFolderName: folder, newFolderName }, // State'i güncelle
+        () => this.updateFolder() // Güncelleme tamamlandıktan sonra updateFolder'ı çalıştır
+      );
     }
   }
 };
@@ -201,12 +203,6 @@ private handleUpdateClick = (folder: string): void => {
         {/* Success and Error Messages */}
         {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
-
-
-
-        {/* Success and Error Messages */}
-        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
         
         {/* Folder List */}
         <div>
@@ -220,7 +216,7 @@ private handleUpdateClick = (folder: string): void => {
               
             ))
           ) : (
-            <p>No folders found.</p>
+            <p>Dosya bulunamadı.</p>
           )}
           </div>
         </div>

@@ -130,8 +130,8 @@ class AdminPanel extends React.Component<IAdminPanelProps, IFormState> {
           <br></br>
           {/* Gönder Butonu */}
           <div className="button-save">
-            <button type="button" onClick={this.handleButtonClick} style={{backgroundColor:"#023061", borderRadius:"5px", borderWidth:"0", color:"#fff", fontSize:".8rem", fontWeight:"500px", padding:"10px"}}>
-              Kaydet
+            <button type="button" onClick={this.handleButtonClick} className={styles['button-save']}>
+            💾 Kaydet
             </button>
         </div>
         </form>
