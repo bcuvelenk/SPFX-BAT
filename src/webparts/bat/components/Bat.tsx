@@ -12,12 +12,18 @@ import spinner from "../assets/spinner.svg"
 import fileIcon from "../assets/FileIcon.svg"
 import home from "../assets/Home.svg"
 import { getUserRole } from "./userHelpers";
+import { searchDocuments } from "./pnpSetup";
+import DepartmentDetail from "./DepartmentDetails";
 
 interface SearchResult {
   Title: string;
   Path: string;
   FileType: string;
+  Author: string;
+  Created: string;
+  Dil: string;
 }
+
 
 export interface Folder {
   Name: string;
@@ -34,6 +40,8 @@ interface IBatState {
   selectedDepartment: string;
   isSearching: boolean;
   userRole: string; // Kullanıcı rolünü tutacak state
+  activePage: string;
+  selectedFolder: string;
 }
 
 export default class Bat extends React.Component<IBatProps, IBatState> {
@@ -49,6 +57,8 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       selectedDepartment: "", // Başlangıçta seçilen departman
       isSearching: false,
       userRole: '', // Başlangıçta kullanıcı rolü boş
+      activePage: "",
+      selectedFolder: "",
     };
   }
 
@@ -77,8 +87,6 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     }
   };
   
-  
-
   private toggleAdminPanel = (): void => {
     this.setState((prevState) => {
       const newState = {
@@ -99,6 +107,7 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
 
   private toggleHome = (): void => {
     this.setState((prevState) => ({
+      activePage: "",
       isDepartmentManagerVisible: false,
       isAdminPanelVisible: false, 
       
@@ -111,66 +120,45 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
     this.setState({ searchQuery: event.target.value });
   };
 
+  
   private handleSearch = async (): Promise<void> => {
     const { searchQuery } = this.state;
-    const { siteUrl, spHttpClient } = this.props;
-    
-
+  
     if (!searchQuery) {
       alert("Lütfen bir arama terimi giriniz.");
       return;
     }
-
+  
     this.setState({ isSearching: true });
-
+  
     try {
-      const endpoint = `${siteUrl}/_api/search/query?querytext='${searchQuery}* path:"${siteUrl}/BAT"'&selectproperties='Title,Path,FileType'`;
-
-      const response: SPHttpClientResponse = await spHttpClient.get(
-        endpoint,
-        SPHttpClient.configurations.v1
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const results: SearchResult[] =
-          data.PrimaryQueryResult.RelevantResults.Table.Rows.map((row: any) => {
-            const result: SearchResult = row.Cells.reduce(
-              (acc: any, cell: any) => ({
-                ...acc,
-                [cell.Key]: cell.Value,
-              }),
-              { Title: "", Path: "", FileType: "" }
-            );
-            return result;
-          });
-
-        this.setState({ searchResults: results, isSearching: false });
-      } else {
-        alert("Arama sırasında bir hata oluştu.");
-        this.setState({ isSearching: false });
-      }
+      const results: SearchResult[] = await searchDocuments(this.props.context, searchQuery);
+      console.log("PnP search results:", results);
+  
+      this.setState({ searchResults: results, isSearching: false });
     } catch (error) {
+      console.error("Arama işlemi başarısız oldu:", error);
       alert("Arama işlemi başarısız oldu.");
-      console.error(error);
       this.setState({ isSearching: false });
     }
   };
 
   private fetchFolders = async (): Promise<void> => {
     const { siteUrl, spHttpClient } = this.props;
-
+  
     try {
       const endpoint = `${siteUrl}/_api/web/GetFolderByServerRelativeUrl('BAT')/Folders`;
       const response: SPHttpClientResponse = await spHttpClient.get(endpoint, SPHttpClient.configurations.v1);
-
+  
       if (response.ok) {
         const data = await response.json();
-        const folders: Folder[] = data.value.map((folder: any) => ({
-          Name: folder.Name,
-          ServerRelativeUrl: folder.ServerRelativeUrl,
-        }));
-
+        const folders: Folder[] = data.value
+          .filter((folder: any) => folder.Name !== "Forms") // Forms adlı klasörü hariç tut
+          .map((folder: any) => ({
+            Name: folder.Name,
+            ServerRelativeUrl: folder.ServerRelativeUrl,
+          }));
+  
         this.setState({ folders });
       } else {
         alert("Klasörler yüklenirken bir hata oluştu.");
@@ -180,7 +168,14 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       console.error(error);
     }
   };
-
+  
+  private goDetailPage = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    param: string
+  ): void => {
+    this.setState({ activePage: "Detail" });
+    this.setState({ selectedFolder: param });
+  };
 
   componentDidMount(): void {
     this.fetchFolders();
@@ -196,9 +191,21 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
       searchResults,
       isSearching,
       folders,
+      activePage,
+      selectedFolder,
     } = this.state;
 
     return (
+      <> 
+      {activePage === "Detail" ? (
+          <DepartmentDetail
+            folderName={selectedFolder}
+            spHttpClient={this.props.spHttpClient}
+            siteUrl={this.props.siteUrl}
+            context={this.props.context}
+            toggleHome={this.toggleHome}
+          />
+      ) : (
       <div className={styles.box}>
         {/* Header Section */}
         <nav className={styles.nav}>
@@ -258,19 +265,26 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
         !searchQuery ? <div className={styles.cardArea}>
         {folders.length > 0 ? (
           folders.map((folder,index) => (
+            <button
+            style={{ backgroundColor: "white", border:"none" }}
+            onClick={(e) => this.goDetailPage(e, folder.Name)}
+          >
             <div key={index} className={styles.cardBox}>
-                 <a href={`https://renksistem.sharepoint.com/sites/GorevYonetimi/BAT/${folder.Name}`} target="_blank">
-                 <div className={styles.cardicon}>
-                       <img style={{ width: "50%" }} src={icon} alt="folder-icon" />
-                   </div>
-                   <div className={styles.cardcontent}>
-                      <p>{folder.Name}</p>
-                   </div>
-                 </a>
-            </div>
-          ))
-        ) : (
-          <p>No folders found.</p>
+                              <div className={styles.cardicon}>
+                                <img
+                                  style={{ width: "50%" }}
+                                  src={icon}
+                                  alt="folder-icon"
+                                />
+                              </div>
+                              <div className={styles.cardcontent}>
+                                {folder.Name}
+                              </div>
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <p>No folders found.</p>
         )}
   
       </div>: ""
@@ -298,16 +312,15 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            {searchResults.map((result, index) => (
+            {searchResults.map((item, index) => (
               <tr key={index} className={styles.tableItems}>
-                <td>{result.Title}</td>
-                <td>Pelda & Buket</td>
-                <td>01.01.2002</td>
-                <td>{result.FileType}</td>
-                <td>Türkçe</td>
+                <td>{item.Title}</td> 
+                <td>{item.Author}</td> 
+                <td>{item.Created}</td> 
+                <td>{item.FileType}</td> 
+                <td>{item.Dil}</td> 
                 <td>
-                  <a href={result.Path} target="_blank">
+                  <a href={item.Path} target="_blank">
                     <button>
                       <img style={{width:"35px"}} src={fileIcon} alt="" />
                     </button>
@@ -315,11 +328,10 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
                 </td>
               </tr>
             ))}
-          </tbody>
         </table>
       </div>
       ) : (
-        ""
+        <p>Sonuç bulunamadı. Lütfen arama ikonuna tıklayınız.</p>
       )}
     </div>:""
     }
@@ -335,6 +347,8 @@ export default class Bat extends React.Component<IBatProps, IBatState> {
           />
         ) : null}
       </div>
+      )}
+      </>
     );
   }
 }

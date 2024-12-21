@@ -22,6 +22,7 @@ $second_color: #f5f5f5;
     font-weight: 600;
     cursor: pointer;
     width: auto;
+
 }
 
 .searchInput {
@@ -41,6 +42,7 @@ $second_color: #f5f5f5;
 }
 
 .cardArea{
+  border: none;
   display: flex;
     flex-wrap: wrap;
     gap: 5px;
@@ -55,6 +57,7 @@ $second_color: #f5f5f5;
 
 .cardBox{
   background-color: white;
+  border: none;
   width: 100px;
   height: 100px;
   border-radius: 25px;
@@ -102,12 +105,7 @@ $second_color: #f5f5f5;
   }
 }
 
-.adminContent {
-  padding: 20px;
-  background-color: #f4f4f4;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+
 .formGroup {
   margin-bottom: 20px;
 }
@@ -138,10 +136,12 @@ $second_color: #f5f5f5;
   margin-bottom: 3px;
   padding: 5px;
   box-shadow: 1px 1px 1px $second_color;
+  border: none;
 }
 
 .tableItems td{
   padding: 5px;
+  border: none;
 }
 
 .tableItems button{
@@ -305,7 +305,7 @@ margin-bottom: 0px;
 .folder-item span {
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+ // color: #333;
 }
 
 .folder-button {

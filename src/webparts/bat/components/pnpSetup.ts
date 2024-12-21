@@ -4,6 +4,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/folders";
 import "@pnp/sp/files";
+import "@pnp/sp/search"; // Arama fonksiyonlarını ekleyin
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 // SPFI bağlamını oluşturmak için kullanılan getSP fonksiyonu
@@ -29,3 +30,37 @@ export const getFilesAndFolders = async (context: WebPartContext, libraryName: s
     throw error;
   }
 };
+
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString();
+};
+
+
+// Arama sorgusu yapmak için bir yardımcı fonksiyon
+export const searchDocuments = async (context: WebPartContext, query: string) => { 
+  try {
+    const sp = getSP(context);
+
+    // PnP JS ile arama sorgusu
+    const results = await sp.search({
+      Querytext: `${query}* AND path:"${context.pageContext.web.absoluteUrl}/BAT"`,
+      SelectProperties: ["Title", "Path", "FileType", "Author", "Created", "Dil"], // Dil alanını da seçin
+    });    
+
+    console.log("Search results (raw):", results.PrimarySearchResults);
+    
+    return results.PrimarySearchResults.map((item: any) => ({
+      Title: item.Title,
+      Path: item.Path,
+      FileType: item.FileType,
+      Author: item.Author || "-",
+      Created: item.Created ? formatDate(item.Created) : "-",
+      Dil: item.Dil || "-", // Dil alanında undefined veya null ise yerine "Bilinmiyor" kullanın
+    }));
+  } catch (error) {
+    console.error("Arama işlemi sırasında hata oluştu:", error);
+    throw error;
+  }
+};
+

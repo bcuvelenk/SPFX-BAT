@@ -42,16 +42,16 @@ export const uploadFile = async (context: WebPartContext, folderName: string, fi
   }
 };
 
-
-
-
 export const getFolders = async (context: WebPartContext): Promise<string[]> => {
   try {
     const sp = getSP(context);
     const folders = await sp.web.getFolderByServerRelativePath("BAT").folders.select("Name")();
-    return folders.map(folder => folder.Name);
+    
+    // 'Forms' klasörünü hariç tutarak filtrele
+    return folders.filter(folder => folder.Name !== "Forms").map(folder => folder.Name);
   } catch (error) {
     console.error("Klasörler getirilirken hata oluştu:", error);
     return [];
   }
 };
+

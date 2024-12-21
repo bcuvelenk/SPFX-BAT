@@ -34,15 +34,18 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
 
   private fetchFolders = async (): Promise<void> => {
     const { spHttpClient, siteUrl } = this.props;
-
+  
     try {
       const endpoint = `${siteUrl}/_api/web/GetFolderByServerRelativeUrl('/sites/GorevYonetimi/BAT')/Folders`;
-
+  
       const response: SPHttpClientResponse = await spHttpClient.get(endpoint, SPHttpClient.configurations.v1);
-
+  
       if (response.ok) {
         const data = await response.json();
-        const folders = data.value.map((folder: any) => folder.Name);
+        const folders = data.value
+          .filter((folder: any) => folder.Name !== "Forms") // Forms adlı klasörü hariç tut
+          .map((folder: any) => folder.Name);
+  
         this.setState({ folders, error: null });
       } else {
         throw new Error(`Error: ${response.statusText}`);
@@ -52,6 +55,7 @@ export default class DepartmentManager extends React.Component<IDepartmentManage
       console.error('Klasörler getirilemedi:', error);
     }
   };
+  
 
   private createFolder = async (): Promise<void> => {
     const { siteUrl, spHttpClient } = this.props;

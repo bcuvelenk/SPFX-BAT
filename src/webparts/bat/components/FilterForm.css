@@ -1,0 +1,101 @@
+.filter-search {
+    width: 30%;
+    position: relative;
+  }
+   
+  .filter-search input {
+    width: 100%;
+    height: 25px;
+    border-radius: 50px;
+    border-width: 0;
+    background-color: #efefef;
+    color: #253066;
+    font-size: 0.8rem;
+    padding: 5px;
+    padding-left: 10px;
+    position: relative;
+    z-index: 1;
+  }
+   
+  .filter-search-icon {
+    width: 20px;
+    position: absolute;
+    top: 7px;
+    right: 0px;
+    z-index: 2;
+  }
+   
+  .filters {
+    display: flex;
+    gap: 35px;
+  }
+   
+  .date-start {
+    width: 150px;
+  }
+   
+  .date-start input {
+    width: 150px;
+    height: 25px;
+    border: 0;
+    background-color: #efefef;
+    padding: 5px;
+    padding-left: 15px;
+    border-radius: 25px;
+    content: "Başlangıç Tarihi";
+  }
+  .date-end {
+    width: 150px;
+  }
+   
+  .date-end input {
+    width: 150px;
+    height: 25px;
+    border: 0;
+    background-color: #efefef;
+    padding: 5px;
+    padding-left: 15px;
+    border-radius: 25px;
+  }
+   
+  /* Dropdown genel stili */
+  .dropdown-language {
+    position: relative;
+    display: inline-block;
+    width: 20%;
+    border: none; /* Bu satır önemli */
+  }
+   
+  .dropdown-language select {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.8rem;
+    border: none; /* Bu satır önemli */
+    border-radius: 25px;
+    background-color: #efefef;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+   
+  /* Dropdown ok işareti */
+  .dropdown-language::after {
+    content: url("../assets/languageIcon.svg");
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 12px;
+    color: #555;
+  }
+   
+  .dropdown-language select:hover {
+    border-color: #d2e3f7;
+  }
+   
+  .dropdown-language select:focus {
+    border-color: #d1e2f5;
+    outline: none;
+  }
+   
